@@ -9,7 +9,7 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     password: Annotated[str,Field(..., min_length=8, max_length=10000)]
-    
+
 
 class UserOut(UserBase):
     id: int
@@ -18,7 +18,9 @@ class UserInDB(UserBase):
     id: int
     hashed_password: str
 
-
+class LoginUser(BaseModel):
+    username: Annotated[str, Field(..., min_length=3, max_length=5000)]
+    password: Annotated[str, Field(..., min_length=8, max_length=10000)]
 class Response(BaseModel):
     message: Optional[str] = None
     has_error: bool = False

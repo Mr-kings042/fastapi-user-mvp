@@ -1,5 +1,5 @@
 from uuid import UUID
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from schemas.user import UserCreate, UserOut
 from database.database import user_db, user_id_counter
 from typing import List, Optional, Annotated
@@ -10,14 +10,14 @@ class UserService:
     @staticmethod
     def create_user(user: UserCreate) -> UserOut:
         global user_id_counter
-        if user.username in user_db:
+        if user.username in [u.username for u in user_db.values()]:
             raise HTTPException(
-                status_code=400,
+                status_code=status.HTTP_409_CONFLICT,
                 detail="Username already exists"
             )
         if user.email in [u.email for u in user_db.values()]:
             raise HTTPException(
-                status_code=400,
+                status_code=status.HTTP_409_CONFLICT,
                 detail="Email already exists"
             )
         

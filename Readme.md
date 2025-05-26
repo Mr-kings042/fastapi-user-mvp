@@ -14,7 +14,7 @@ How to Run:
 1. cd fastapi-user-mvp
 2. Install the required packages: `pip install -r requirements.txt`
 3. Run the application: `uvicorn main:app --reload`
-4. Use a tool like Postman to test the APIs
+4. Use a tools like Postman, insomia to test the APIs
 
 
 Example API Calls:

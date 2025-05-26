@@ -12,35 +12,22 @@ user_router = APIRouter()
 @user_router.post("", response_model=Response, status_code=status.HTTP_201_CREATED)
 def create_user(user_in: UserCreate):
     user_out = user_service.create_user(user_in)
-    if user_out.username in user_db:
+    if user_out.username in user_db.values():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User already exists"
+            detail="Username already exists"
         )
     
-    return Response(message="User created successfully", data=[user_out], has_error=False)
+    return Response(message="User created successfully", data=user_out, has_error=False)
 
 
-
-# @user_router.post("", response_model=Response, status_code=status.HTTP_201_CREATED)
-# async def create_user(user: UserCreate):
-#     """Create a new user with standardized response"""
-#     try:
-#         user_out = user_service.create_user(user)
-#         return Response(
-#             message="User created successfully",
-#             data=[user_out],  # Note the list wrapping
-#             has_error=False
-#         )
-#     except HTTPException as he:
-#         return Response(
-#             message="Failed to create user",
-#             error=str(he.detail),
-#             has_error=True
-#         )
-#     except Exception as e:
-#         return Response(
-#             message="Internal server error",
-#             error=str(e),
-#             has_error=True
-#         )
+@user_router.post("/login", response_model=Response)
+def login_user(user_in: UserCreate):
+    user_out = user_service.login_user(user_in)
+    if not user_out:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password"
+        )
+    
+    return Response(message="Login successful", data=user_out, has_error=False)
