@@ -1,7 +1,7 @@
 from typing import List, Optional, Annotated
 from uuid import UUID
-from fastapi import APIRouter, HTTPException, status
-from schemas.user import  UserCreate, UserOut, Response
+from fastapi import APIRouter, Form, HTTPException, status
+from schemas.user import  LoginUser, UserCreate, Response
 from database.database import user_db
 from services.user import user_service
 
@@ -21,9 +21,9 @@ def create_user(user_in: UserCreate):
     return Response(message="User created successfully", data=user_out, has_error=False)
 
 
-@user_router.post("/login", response_model=Response)
-def login_user(user_in: UserCreate):
-    user_out = user_service.login_user(user_in)
+@user_router.post("/login", response_model=Response,status_code=status.HTTP_200_OK)
+def login_user(user_login: LoginUser):
+    user_out = user_service.login_user(user_login)
     if not user_out:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

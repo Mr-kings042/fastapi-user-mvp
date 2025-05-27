@@ -56,3 +56,22 @@ def test_create_user_with_existing_email():
     response = client.post("/user", json=duplicate_payload)
     assert response.status_code == 409
     assert response.json()["detail"] == "Email already exists"
+
+#Test for user login
+def test_login_user():
+    payload = {
+        "username": "testuser",
+        "password": "testpassword123"
+    }
+    response = client.post("/user/login", json=payload)
+    assert response.status_code == 200
+    assert response.json()["message"] == "Login successful"
+
+def test_login_user_with_invalid_credentials():
+    payload = {
+        "username": "testuser",
+        "password": "wrongpassword"
+    }
+    response = client.post("/user/login", json=payload)
+    assert response.status_code == 401
+    assert response.json()["detail"] == "Invalid username or Password"
